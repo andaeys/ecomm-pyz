@@ -1,0 +1,15 @@
+import time
+
+from app import app, db
+
+# Initialize database
+with app.app_context():
+    try:
+        time.sleep(1)
+        db.create_all()
+        print("db Tables created successfully")
+    except Exception as e:
+        print(f"db Error creating tables: {e}")
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=80)
