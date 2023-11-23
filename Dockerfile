@@ -1,3 +1,4 @@
+
 # Install dependencies (cached if requirements.txt hasn't changed)
 FROM python:3.8 AS builder
 
@@ -12,6 +13,10 @@ WORKDIR /app
 COPY --from=builder /usr/local/lib/python3.8/site-packages/ /usr/local/lib/python3.8/site-packages/
 COPY . .
 
+# Install Flask explicitly
+RUN pip install Flask
+
 EXPOSE 80
 
 CMD ["python", "run.py"]
+

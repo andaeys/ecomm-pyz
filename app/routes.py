@@ -1,17 +1,49 @@
-from flask import request, jsonify
-from app import app
+from flask import request, jsonify, abort
+from app import app, db
 from app.models import User
 import logging
+from flask_login import login_user
 
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s: %(message)s')
 
 
-@app.route('/hello', methods=['GET'])
-def sample_endpoint():
-    data = {'message': 'This is a sample endpoint.'}
-    return jsonify(data)
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+
+    username = data['username']
+    email = data['email']
+    password = data['password']
+
+    existing_user = User.query.filter_by(username=username).first()
+    if existing_user:
+        return jsonify({'message': 'Username already taken'}), 400
+
+    new_user = User(username=username, email=email, password=password)
+    db.session.add(new_user)
+    db.session.commit()
+
+    login_user(new_user)
+
+    return jsonify({'message': 'User registered successfully'}), 201
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+
+    username = data['username']
+    password = data['password']
+
+    user = User.query.filter_by(username=username).first()
+
+    if user and user.check_password(password):
+        login_user(user)
+        return jsonify({'message': 'Login successful'}), 200
+
+    return jsonify({'message': 'Invalid username or password'}), 401
 
 
 @app.route('/users', methods=['GET'])
