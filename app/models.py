@@ -11,9 +11,6 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
 
-    # Add a relationship to ShoppingCart
-    shopping_cart = db.relationship('ShoppingCart', backref='user', lazy=True)
-
     def __init__(self, username, email, password):
         self.username = username
         self.email = email
@@ -39,6 +36,4 @@ class ShoppingCart(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
-    user = db.relationship('User', backref=db.backref('shopping_cart', lazy=True))
-
 
