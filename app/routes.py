@@ -4,6 +4,7 @@ from app.models import User
 import logging
 from flask_login import login_user
 from app.apis.product_routes import product_routes
+from app.apis.cart_routes import cart_routes
 
 
 # Set up logging
@@ -57,3 +58,4 @@ def get_users():
 
 
 routes.register_blueprint(product_routes, url_prefix='/products')
+routes.register_blueprint(cart_routes, url_prefix='/cart')
