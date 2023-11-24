@@ -1,12 +1,15 @@
-from flask import request, jsonify, abort
+from flask import request, jsonify, Blueprint
 from app import app, db
 from app.models import User
 import logging
 from flask_login import login_user
+from app.apis.product_routes import product_routes
 
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s: %(message)s')
+
+routes = Blueprint('routes', __name__)
 
 
 @app.route('/register', methods=['POST'])
@@ -53,3 +56,4 @@ def get_users():
     return jsonify({'users': user_list})
 
 
+routes.register_blueprint(product_routes, url_prefix='/products')
